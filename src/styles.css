@@ -1,0 +1,86 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  background: #111827;
+}
+
+.title {
+  color: white;
+}
+
+.main {
+  background-color: #111827;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.container {
+  height: 100%;
+  padding: 10px 50px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-bottom: 50px;
+}
+
+.add-button {
+  background-color: #0ea5e9;
+  border: none;
+  color: white;
+  padding: 15px 30px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s all ease-out;
+}
+
+.add-button:hover {
+  background-color: #0284c7;
+}
+
+.parent {
+  position: relative;
+  background-color: #1f2937;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: end;
+}
+
+.delete-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #ef4444;
+  border: none;
+  color: white;
+  padding: 5px;
+  width: 30px;
+  height: 30px;
+  display: inline-block;
+  font-size: 16px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: 0.2s all ease-out;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.delete-button:hover {
+  background-color: #dc2626;
+}
