@@ -1,16 +1,16 @@
-import React, { useRef, useState, useEffect } from "react";
-import Moveable from "react-moveable";
-import trashIcon from "./assets/trash.svg";
+import React, { useRef, useState, useEffect } from 'react'
+import Moveable from 'react-moveable'
+import trashIcon from './assets/trash.svg'
 
 const App = () => {
-  const [moveableComponents, setMoveableComponents] = useState([]);
-  const [selected, setSelected] = useState(null);
+  const [moveableComponents, setMoveableComponents] = useState([])
+  const [selected, setSelected] = useState(null)
 
   /**
    * Add a new moveable component to the list of moveable components
    */
   const addMoveable = () => {
-    const COLORS = ["red", "blue", "yellow", "green", "purple"];
+    const COLORS = ['red', 'blue', 'yellow', 'green', 'purple']
 
     setMoveableComponents([
       ...moveableComponents,
@@ -21,10 +21,10 @@ const App = () => {
         width: 100,
         height: 100,
         color: COLORS[Math.floor(Math.random() * COLORS.length)],
-        updateEnd: true,
-      },
-    ]);
-  };
+        updateEnd: true
+      }
+    ])
+  }
 
   /**
    *
@@ -45,12 +45,12 @@ const App = () => {
   const updateMoveable = (id, newComponent, updateEnd = false) => {
     const updatedMoveables = moveableComponents.map((moveable, i) => {
       if (moveable.id === id) {
-        return { id, ...newComponent, updateEnd };
+        return { id, ...newComponent, updateEnd }
       }
-      return moveable;
-    });
-    setMoveableComponents(updatedMoveables);
-  };
+      return moveable
+    })
+    setMoveableComponents(updatedMoveables)
+  }
 
   /**
    *
@@ -60,9 +60,9 @@ const App = () => {
    * Handle the resize start event
    */
   const handleResizeStart = (index, e) => {
-    console.log("e", e.direction);
+    console.log('e', e.direction)
     // Check if the resize is coming from the left handle
-    const [handlePosX, handlePosY] = e.direction;
+    const [handlePosX, handlePosY] = e.direction
     // 0 => center
     // -1 => top or left
     // 1 => bottom or right
@@ -71,14 +71,14 @@ const App = () => {
     // -1, 0
     // -1, 1
     if (handlePosX === -1) {
-      console.log("width", moveableComponents, e);
+      console.log('width', moveableComponents, e)
       // Save the initial left and width values of the moveable component
-      const initialLeft = e.left;
-      const initialWidth = e.width;
+      const initialLeft = e.left
+      const initialWidth = e.width
 
       // Set up the onResize event handler to update the left value based on the change in width
     }
-  };
+  }
 
   /**
    *
@@ -87,8 +87,8 @@ const App = () => {
    * Remove the moveable component with the given id
    */
   const handleRemoveComponent = (id) => {
-    setMoveableComponents(moveableComponents.filter((el) => el.id !== id));
-  };
+    setMoveableComponents(moveableComponents.filter((el) => el.id !== id))
+  }
 
   return (
     <main className="main">
@@ -114,12 +114,12 @@ const App = () => {
         </div>
       </div>
     </main>
-  );
-};
+  )
+}
 
-export default App;
+export default App
 
-const OBJECT_FIT_OPTIONS = ["fill", "contain", "cover", "scale-down"];
+const OBJECT_FIT_OPTIONS = ['fill', 'contain', 'cover', 'scale-down']
 
 const Component = ({
   updateMoveable,
@@ -133,9 +133,12 @@ const Component = ({
   setSelected,
   isSelected = false,
   updateEnd,
-  handleRemoveComponent,
+  handleRemoveComponent
 }) => {
-  const ref = useRef();
+  const ref = useRef()
+
+  let parent = document.getElementById('parent')
+  let parentBounds = parent?.getBoundingClientRect()
 
   const [nodoReferencia, setNodoReferencia] = useState({
     top,
@@ -144,14 +147,11 @@ const Component = ({
     height,
     index,
     color,
-    id,
-  });
+    id
+  })
 
-  const [image, setImage] = useState(null);
-  const [imageFit, setImageFit] = useState("fill");
-
-  let parent = document.getElementById("parent");
-  let parentBounds = parent?.getBoundingClientRect();
+  const [image, setImage] = useState(null)
+  const [imageFit, setImageFit] = useState('fill')
 
   /**
    *
@@ -160,43 +160,43 @@ const Component = ({
    * Handle the resize event
    */
   const onResize = async (e) => {
-    let newWidth = e.width;
-    let newHeight = e.height;
+    let newWidth = e.width
+    let newHeight = e.height
 
-    const positionMaxTop = top + newHeight;
-    const positionMaxLeft = left + newWidth;
+    const positionMaxTop = top + newHeight < 0 ? 0 : top + newHeight
+    const positionMaxLeft = left + newWidth < 0 ? 0 : left + newWidth
 
     if (positionMaxTop > parentBounds?.height)
-      newHeight = parentBounds?.height - top;
+      newHeight = parentBounds?.height - top
     if (positionMaxLeft > parentBounds?.width)
-      newWidth = parentBounds?.width - left;
+      newWidth = parentBounds?.width - left
 
     updateMoveable(id, {
       top,
       left,
       width: newWidth,
       height: newHeight,
-      color,
-    });
+      color
+    })
 
-    const beforeTranslate = e.drag.beforeTranslate;
+    const beforeTranslate = e.drag.beforeTranslate
 
-    ref.current.style.width = `${e.width}px`;
-    ref.current.style.height = `${e.height}px`;
+    ref.current.style.width = `${e.width}px`
+    ref.current.style.height = `${e.height}px`
 
-    let translateX = beforeTranslate[0];
-    let translateY = beforeTranslate[1];
+    let translateX = beforeTranslate[0]
+    let translateY = beforeTranslate[1]
 
-    ref.current.style.transform = `translate(${translateX}px, ${translateY}px)`;
+    ref.current.style.transform = `translate(${translateX}px, ${translateY}px)`
 
     setNodoReferencia({
       ...nodoReferencia,
       translateX,
       translateY,
       top: top + translateY < 0 ? 0 : top + translateY,
-      left: left + translateX < 0 ? 0 : left + translateX,
-    });
-  };
+      left: left + translateX < 0 ? 0 : left + translateX
+    })
+  }
 
   /**
    *
@@ -205,26 +205,26 @@ const Component = ({
    * Handle the resize end event
    */
   const onResizeEnd = async (e) => {
-    const { lastEvent } = e;
+    const { lastEvent } = e
 
     if (lastEvent) {
       if (lastEvent.drag) {
-        const { drag } = lastEvent;
-        const { beforeTranslate } = drag;
+        const { drag } = lastEvent
+        const { beforeTranslate } = drag
 
-        let newWidth = lastEvent.width || 0;
-        let newHeight = lastEvent.height || 0;
+        let newWidth = lastEvent.width || 0
+        let newHeight = lastEvent.height || 0
 
-        const positionMaxTop = top + newHeight;
-        const positionMaxLeft = left + newWidth;
+        const positionMaxTop = top + newHeight
+        const positionMaxLeft = left + newWidth
 
         if (positionMaxTop > parentBounds?.height)
-          newHeight = parentBounds?.height - top;
+          newHeight = parentBounds?.height - top
         if (positionMaxLeft > parentBounds?.width)
-          newWidth = parentBounds?.width - left;
+          newWidth = parentBounds?.width - left
 
-        const absoluteTop = top + beforeTranslate[1] < 0 ? 0 : top;
-        const absoluteLeft = left + beforeTranslate[0] < 0 ? 0 : left;
+        const absoluteTop = top + beforeTranslate[1] < 0 ? 0 : top
+        const absoluteLeft = left + beforeTranslate[0] < 0 ? 0 : left
 
         updateMoveable(
           id,
@@ -233,68 +233,68 @@ const Component = ({
             left: absoluteLeft,
             width: newWidth,
             height: newHeight,
-            color,
+            color
           },
           true
-        );
+        )
       }
     }
-  };
+  }
 
   /**
    * Fetch a random image from the JSONPlaceholder API
    */
   const fetchImage = async () => {
-    const randId = Math.floor(Math.random() * 5000);
+    const randId = Math.floor(Math.random() * 5000)
     const response = await fetch(
       `https://jsonplaceholder.typicode.com/photos/${randId}`
-    );
-    const data = await response.json();
-    setImage(data);
-  };
+    )
+    const data = await response.json()
+    setImage(data)
+  }
 
   /**
    * Initialize the image and the image fit to a component
    */
   useEffect(() => {
-    fetchImage();
+    fetchImage()
     setImageFit(
       OBJECT_FIT_OPTIONS[Math.floor(Math.random() * OBJECT_FIT_OPTIONS.length)]
-    );
-  }, []);
+    )
+  }, [])
 
   return (
     <>
       <div
         ref={ref}
         className="draggable moveable-component"
-        id={"component-" + id}
+        id={'component-' + id}
         style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
           objectFit: imageFit,
-          position: "absolute",
+          position: 'absolute',
           top: top,
           left: left,
           width: width,
           height: height,
           background: color,
-          overflow: "hidden",
-          borderRadius: "10px",
+          overflow: 'hidden',
+          borderRadius: '10px'
         }}
         onClick={() => setSelected(id)}
       >
         {image && (
           <img
             src={image.url}
-            alt={image.title || "image"}
+            alt={image.title || 'image'}
             style={{
-              position: "relative",
-              margin: "0",
-              width: "100%",
-              height: "100%",
-              objectFit: imageFit,
+              position: 'relative',
+              margin: '0',
+              width: '100%',
+              height: '100%',
+              objectFit: imageFit
             }}
           />
         )}
@@ -306,8 +306,8 @@ const Component = ({
             src={trashIcon}
             alt="Delete"
             style={{
-              width: "20px",
-              height: "20px",
+              width: '20px',
+              height: '20px'
             }}
           />
         </button>
@@ -318,23 +318,23 @@ const Component = ({
         draggable
         onDrag={(e) => {
           updateMoveable(id, {
-            top: e.top,
-            left: e.left,
+            top: e.top < 0 ? 0 : e.top,
+            left: e.left < 0 ? 0 : e.left,
             width,
             height,
-            color,
-          });
+            color
+          })
         }}
         onResize={onResize}
         onResizeEnd={onResizeEnd}
         keepRatio={false}
         throttleResize={1}
-        renderDirections={["nw", "n", "ne", "w", "e", "sw", "s", "se"]}
+        renderDirections={['nw', 'n', 'ne', 'w', 'e', 'sw', 's', 'se']}
         edge={false}
         zoom={1}
         origin={false}
         padding={{ left: 0, top: 0, right: 0, bottom: 0 }}
       />
     </>
-  );
-};
+  )
+}
