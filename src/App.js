@@ -161,16 +161,13 @@ const Component = ({
    */
   const onResize = async (e) => {
     console.log(e)
-    let newWidth = e.width
-    let newHeight = e.height
-
-    const positionMaxTop = top + newHeight
-    const positionMaxLeft = left + newWidth
-
-    if (positionMaxTop > parentBounds?.height)
-      newHeight = parentBounds?.height - top
-    if (positionMaxLeft > parentBounds?.width)
-      newWidth = parentBounds?.width - left
+    console.log(e.width)
+    let newWidth =
+      e.width + left > parentBounds.width ? parentBounds.width - left : e.width
+    let newHeight =
+      e.height + top > parentBounds.height
+        ? parentBounds.height - top
+        : e.height
 
     updateMoveable(id, {
       top,
@@ -182,8 +179,8 @@ const Component = ({
 
     const beforeTranslate = e.drag.beforeTranslate
 
-    ref.current.style.width = `${e.width}px`
-    ref.current.style.height = `${e.height}px`
+    ref.current.style.width = `${newWidth}px`
+    ref.current.style.height = `${newHeight}px`
 
     let translateX = beforeTranslate[0]
     let translateY = beforeTranslate[1]
@@ -216,16 +213,8 @@ const Component = ({
         let newWidth = lastEvent.width || 0
         let newHeight = lastEvent.height || 0
 
-        const positionMaxTop = top + newHeight
-        const positionMaxLeft = left + newWidth
-
-        if (positionMaxTop > parentBounds?.height)
-          newHeight = parentBounds?.height - top
-        if (positionMaxLeft > parentBounds?.width)
-          newWidth = parentBounds?.width - left
-
-        const absoluteTop = top + beforeTranslate[1] < 0 ? 0 : top
-        const absoluteLeft = left + beforeTranslate[0] < 0 ? 0 : left
+        const absoluteTop = top + beforeTranslate[1]
+        const absoluteLeft = left + beforeTranslate[0]
 
         updateMoveable(
           id,
