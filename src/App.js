@@ -160,11 +160,12 @@ const Component = ({
    * Handle the resize event
    */
   const onResize = async (e) => {
+    console.log(e)
     let newWidth = e.width
     let newHeight = e.height
 
-    const positionMaxTop = top + newHeight < 0 ? 0 : top + newHeight
-    const positionMaxLeft = left + newWidth < 0 ? 0 : left + newWidth
+    const positionMaxTop = top + newHeight
+    const positionMaxLeft = left + newWidth
 
     if (positionMaxTop > parentBounds?.height)
       newHeight = parentBounds?.height - top
@@ -318,8 +319,18 @@ const Component = ({
         draggable
         onDrag={(e) => {
           updateMoveable(id, {
-            top: e.top < 0 ? 0 : e.top,
-            left: e.left < 0 ? 0 : e.left,
+            top:
+              e.bottom < 0
+                ? parentBounds.height - e.width
+                : e.top < 0
+                ? 0
+                : e.top,
+            left:
+              e.right < 0
+                ? parentBounds.width - e.width
+                : e.left < 0
+                ? 0
+                : e.left,
             width,
             height,
             color
